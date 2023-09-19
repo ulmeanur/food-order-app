@@ -10,8 +10,9 @@
   }
   
   .modal {
+    
     position: fixed;
-    top: 20vh;
+    top: 20vh; /* vh is part of CSS Viewport Units: viewport height (vh), viewport width (vw), viewport min, viewport max  */
     left: 5%;
     width: 90%;
     background-color: white;
