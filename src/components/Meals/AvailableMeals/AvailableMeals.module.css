@@ -10,6 +10,20 @@
     margin: 0;
     padding: 0;
   }
+
+  .meals-loading {
+    text-align: center;
+    color: white;
+  }
+
+  .meals-error p {
+    text-align: center;
+    color: rgb(166, 9, 9);
+    background-color: salmon;
+    border-radius: 10px;
+    margin: 1rem 2rem;
+    padding: 0.5rem 0.2rem;
+  }
   
   @keyframes meals-appear {
     from {
