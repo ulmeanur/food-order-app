@@ -1,7 +1,7 @@
 .form {
     margin: 1rem 0;
     height: 19rem;
-    overflow: auto;
+    overflow: scroll;
   }
   
   .control {
@@ -26,6 +26,7 @@
     display: flex;
     justify-content: flex-end;
     gap: 1rem;
+    margin-top: 1rem;
   }
   
   .actions button {
@@ -61,4 +62,11 @@
   .invalid input {
     border-color: #aa0b20;
     background-color: #ffeff1;
+  }
+
+  .checkout {
+    border-radius: 15px;
+    padding: 1rem;
+    background-color: rgb(247, 247, 247);
+    margin: 1rem 0;
   }

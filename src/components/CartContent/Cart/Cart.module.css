@@ -6,9 +6,9 @@
     overflow: auto;
   }
 
-  .cart {
-    overflow-y: scroll;
-    max-height: 20rem;
+  .cart ul {
+    margin: 0;
+    padding: 0;
   }
 
   .cart h2 {
@@ -53,3 +53,4 @@
     background-color: #8a2b06;
     color: white;
   }
+
