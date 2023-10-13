@@ -2,54 +2,152 @@ import React, { useState, useRef, useReducer, useEffect } from 'react';
 import classes from './Checkout.module.css';
 import Input from '../../UI/Input/Input';
 
+const initialStateInput = { value: '', isValid: false, isTouched: false };
+
 const nameReducer = (state, action) => {
 	if (action.type === 'USER_INPUT') {
-		return { value: action.val, isValid: action.val.trim().length > 6 };
+		return {
+			value: action.val,
+			isValid: action.val.trim().length > 6,
+			isTouched: state.isTouched,
+		};
 	}
 	if (action.type === 'INPUT_BLUR') {
-		return { value: state.value, isValid: state.value.trim().length > 6 };
+		return {
+			value: state.value,
+			isValid: state.value.trim().length > 6,
+			isTouched: true,
+		};
 	}
-	return { value: '', isValid: false };
+
+	if (action.type === 'RESET') {
+		return initialStateInput;
+	}
+	if (action.type === 'SUBMIT') {
+		return {
+			value: state.value,
+			isValid: state.isValid,
+			isTouched: true,
+		};
+	}
+
+	return initialStateInput;
 };
 
 const emailReducer = (state, action) => {
 	if (action.type === 'USER_INPUT') {
-		return { value: action.val, isValid: action.val.includes('@') };
+		return {
+			value: action.val,
+			isValid: action.val.includes('@'),
+			isTouched: state.isTouched,
+		};
 	}
 	if (action.type === 'INPUT_BLUR') {
-		return { value: state.value, isValid: state.value.includes('@') };
+		return {
+			value: state.value,
+			isValid: state.value.includes('@'),
+			isTouched: true,
+		};
 	}
-	return { value: '', isValid: false };
+	if (action.type === 'RESET') {
+		return initialStateInput;
+	}
+	if (action.type === 'SUBMIT') {
+		return {
+			value: state.value,
+			isValid: state.isValid,
+			isTouched: true,
+		};
+	}
+
+	return initialStateInput;
 };
 
 const streetReducer = (state, action) => {
 	if (action.type === 'USER_INPUT') {
-		return { value: action.val, isValid: action.val.trim().length > 3 };
+		return {
+			value: action.val,
+			isValid: action.val.trim().length > 3,
+			isTouched: state.isTouched,
+		};
 	}
 	if (action.type === 'INPUT_BLUR') {
-		return { value: state.value, isValid: state.value.trim().length > 3 };
+		return {
+			value: state.value,
+			isValid: state.value.trim().length > 3,
+			isTouched: true,
+		};
 	}
-	return { value: '', isValid: false };
+	if (action.type === 'RESET') {
+		return initialStateInput;
+	}
+		if (action.type === 'SUBMIT') {
+		return {
+			value: state.value,
+			isValid: state.isValid,
+			isTouched: true,
+		};
+	}
+
+	return initialStateInput;
 };
 
 const postalReducer = (state, action) => {
 	if (action.type === 'USER_INPUT') {
-		return { value: action.val, isValid: action.val.trim().length > 6 };
+		return {
+			value: action.val,
+			isValid: action.val.trim().length > 6,
+			isTouched: state.isTouched,
+		};
 	}
 	if (action.type === 'INPUT_BLUR') {
-		return { value: state.value, isValid: state.value.trim().length > 6 };
+		return {
+			value: state.value,
+			isValid: state.value.trim().length > 6,
+			isTouched: true,
+		};
 	}
-	return { value: '', isValid: false };
+	if (action.type === 'RESET') {
+		return initialStateInput;
+	}
+	if (action.type === 'SUBMIT') {
+		return {
+			value: state.value,
+			isValid: state.isValid,
+			isTouched: true,
+		};
+	}
+
+	return initialStateInput;
 };
 
 const cityReducer = (state, action) => {
 	if (action.type === 'USER_INPUT') {
-		return { value: action.val, isValid: action.val.trim().length > 3 };
+		return {
+			value: action.val,
+			isValid: action.val.trim().length > 3,
+			isTouched: state.isTouched,
+		};
 	}
 	if (action.type === 'INPUT_BLUR') {
-		return { value: state.value, isValid: state.value.trim().length > 3 };
+		return {
+			value: state.value,
+			isValid: state.value.trim().length > 3,
+			isTouched: true,
+		};
 	}
-	return { value: '', isValid: false };
+	if (action.type === 'RESET') {
+		return initialStateInput;
+	}
+	if (action.type === 'SUBMIT') {
+		return {
+			value: state.value,
+			isValid: state.isValid,
+			isTouched: true,
+		};
+	}
+
+	return initialStateInput;
 };
 
 const Checkout = (props) => {
@@ -64,43 +162,58 @@ const Checkout = (props) => {
 	const [nameState, dispatchName] = useReducer(nameReducer, {
 		value: '',
 		isValid: null,
+		isTouched: false,
 	});
 
 	const [emailState, dispatchEmail] = useReducer(emailReducer, {
 		value: '',
 		isValid: null,
+		isTouched: false,
 	});
 
 	const [streetState, dispatchStreet] = useReducer(streetReducer, {
 		value: '',
 		isValid: null,
+		isTouched: false,
 	});
 
 	const [postalState, dispatchPostal] = useReducer(postalReducer, {
 		value: '',
 		isValid: null,
+		isTouched: false,
 	});
 
 	const [cityState, dispatchCity] = useReducer(cityReducer, {
 		value: '',
 		isValid: null,
+		isTouched: false,
 	});
 
-	const { isValid: nameIsValid } = nameState;
-	const { isValid: emailIsValid } = emailState;
-	const { isValid: streetIsValid } = streetState;
-	const { isValid: postalIsValid } = postalState;
-	const { isValid: cityIsValid } = cityState;
+	const { isValid: enterednameIsInvalid, isTouched: nameIsTouched } = nameState;
+	const { isValid: enteredemailIsInvalid, isTouched: emailIsTouched } =
+		emailState;
+	const { isValid: enteredstreetIsInvalid, isTouched: streetIsTouched } =
+		streetState;
+	const { isValid: enteredpostalIsInvalid, isTouched: postalIsTouched } =
+		postalState;
+	const { isValid: enteredcityIsInvalid, isTouched: cityIsTouched } = cityState;
+
+	const nameIsInvalid = !enterednameIsInvalid && nameIsTouched;
+	const emailIsInvalid = !enteredemailIsInvalid && emailIsTouched;
+	const streetIsInvalid = !enteredstreetIsInvalid && streetIsTouched;
+	const postalIsInvalid = !enteredpostalIsInvalid && postalIsTouched;
+	const cityIsInvalid = !enteredcityIsInvalid && cityIsTouched;
 
 	useEffect(() => {
 		const identifier = setTimeout(() => {
 			console.log('Checking form validity!');
+
 			setFormIsValid(
-				nameIsValid &&
-					emailIsValid &&
-					streetIsValid &&
-					postalIsValid &&
-					cityIsValid
+				nameIsInvalid &&
+					emailIsInvalid &&
+					streetIsInvalid &&
+					postalIsInvalid &&
+					cityIsInvalid
 			);
 		}, 500);
 
@@ -108,7 +221,18 @@ const Checkout = (props) => {
 			console.log('CLEANUP');
 			clearTimeout(identifier);
 		};
-	}, [nameIsValid, emailIsValid, streetIsValid, postalIsValid, cityIsValid]);
+	}, [
+		enterednameIsInvalid,
+		enteredemailIsInvalid,
+		enteredstreetIsInvalid,
+		enteredpostalIsInvalid,
+		enteredcityIsInvalid,
+		nameIsTouched,
+		emailIsTouched,
+		streetIsTouched,
+		postalIsTouched,
+		cityIsTouched,
+	]);
 
 	const nameChangeHandler = (event) => {
 		dispatchName({ type: 'USER_INPUT', val: event.target.value });
@@ -155,24 +279,34 @@ const Checkout = (props) => {
 
 		if (formIsValid) {
 			console.log('Valid - Submit form');
-		} else if (!nameState.isValid) {
+		} else if (nameIsInvalid) {
 			nameInputRef.current.focus();
-		} else if (!emailState.isValid) {
+		} else if (emailIsInvalid) {
 			emailInputRef.current.focus();
-		} else if (!streetState.isValid) {
+		} else if (streetIsInvalid) {
 			streetInputRef.current.focus();
-		} else if (!postalState.isValid) {
+		} else if (postalIsInvalid) {
 			postalInputRef.current.focus();
-		} else if (!cityState.isValid) {
+		} else if (cityIsInvalid) {
 			cityInputRef.current.focus();
 		}
+
+		dispatchName({ type: 'SUBMIT' });
+		dispatchEmail({ type: 'SUBMIT' });
+		dispatchStreet({ type: 'SUBMIT' });
+		dispatchPostal({ type: 'SUBMIT' });
+		dispatchCity({ type: 'SUBMIT' });
 	};
 
 	return (
 		<div className={classes.checkout}>
 			<h2>Checkout details</h2>
 			<form className={classes.form} onSubmit={submitCheckoutHandler}>
-				<div className={`${classes.control} ${nameIsValid ? "" : classes.invalid }`}>
+				<div
+					className={`${classes.control} ${
+						nameIsInvalid ? classes.invalid : ''
+					}`}
+				>
 					<Input
 						ref={nameInputRef}
 						label="Name"
@@ -180,15 +314,21 @@ const Checkout = (props) => {
 							id: 'name',
 							type: 'text',
 							value: nameState.value,
-							isValid: `${nameIsValid}`,
+							isValid: `${enterednameIsInvalid}`,
 							onChange: nameChangeHandler,
 							onBlur: validateNameHandler,
 						}}
 					/>
-					{!nameIsValid && <p className={classes.error}>Error! Value entered is invalid!</p>}
+					{nameIsInvalid && (
+						<p className={classes.error}>Error! Value entered is invalid!</p>
+					)}
 				</div>
 
-				<div className={`${classes.control} ${emailIsValid ? "" : classes.invalid }`}>
+				<div
+					className={`${classes.control} ${
+						emailIsInvalid ? classes.invalid : ''
+					}`}
+				>
 					<Input
 						ref={emailInputRef}
 						label="Email"
@@ -196,16 +336,21 @@ const Checkout = (props) => {
 							id: 'email',
 							type: 'email',
 							value: emailState.value,
-							isValid: `${emailIsValid}`,
+							isValid: `${enteredemailIsInvalid}`,
 							onChange: emailChangeHandler,
 							onBlur: validateEmailHandler,
 						}}
 					/>
-					{!emailIsValid && <p className={classes.error}>Error! Value entered is invalid!</p>}
+					{emailIsInvalid && (
+						<p className={classes.error}>Error! Value entered is invalid!</p>
+					)}
 				</div>
-				
 
-				<div className={`${classes.control} ${streetIsValid ? "" : classes.invalid }`}>
+				<div
+					className={`${classes.control} ${
+						streetIsInvalid ? classes.invalid : ''
+					}`}
+				>
 					<Input
 						ref={streetInputRef}
 						label="Street"
@@ -213,40 +358,54 @@ const Checkout = (props) => {
 							id: 'street',
 							type: 'text',
 							value: streetState.value,
-							isValid: `${streetIsValid}`,
+							isValid: `${enteredstreetIsInvalid}`,
 							onChange: streetChangeHandler,
 							onBlur: validateStreetHandler,
 						}}
 					/>
-					{!streetIsValid && <p className={classes.error}>Error! Value entered is invalid!</p>}
+					{streetIsInvalid && (
+						<p className={classes.error}>Error! Value entered is invalid!</p>
+					)}
 				</div>
-				<div className={`${classes.control} ${postalIsValid ? "" : classes.invalid }`}>
+				<div
+					className={`${classes.control} ${
+						postalIsInvalid ? classes.invalid : ''
+					}`}
+				>
 					<Input
 						ref={postalInputRef}
 						label="Postal Code"
 						input={{
 							id: 'postal',
 							type: 'text',
-							isValid: `${postalIsValid}`,
+							isValid: `${enteredpostalIsInvalid}`,
 							onChange: postalChangeHandler,
 							onBlur: validatePostalHandler,
 						}}
 					/>
-					{!postalIsValid && <p className={classes.error}>Error! Value entered is invalid!</p>}
+					{postalIsInvalid && (
+						<p className={classes.error}>Error! Value entered is invalid!</p>
+					)}
 				</div>
-				<div className={`${classes.control} ${cityIsValid ? "" : classes.invalid }`}>
+				<div
+					className={`${classes.control} ${
+						cityIsInvalid ? classes.invalid : ''
+					}`}
+				>
 					<Input
 						ref={cityInputRef}
 						label="City"
 						input={{
 							id: 'city',
 							type: 'text',
-							isValid: `${cityIsValid}`,
+							isValid: `${enteredcityIsInvalid}`,
 							onChange: cityChangeHandler,
 							onBlur: validateCityHandler,
 						}}
 					/>
-					{!cityIsValid && <p className={classes.error}>Error! Value entered is invalid!</p>}
+					{cityIsInvalid && (
+						<p className={classes.error}>Error! Value entered is invalid!</p>
+					)}
 				</div>
 				<div className={classes.actions}>
 					<button type="submit" className={classes.submit}>
