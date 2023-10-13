@@ -1,10 +1,13 @@
-import React, { useState, useRef, useReducer, useEffect } from 'react';
+import React, { useState, useRef, useReducer } from 'react';
 import classes from './Checkout.module.css';
 import Input from '../../UI/Input/Input';
+
+// TO DO: create a custome hook for the input logic that repeats
 
 const initialStateInput = { value: '', isValid: false, isTouched: false };
 
 const nameReducer = (state, action) => {
+	console.log('nameReducer should update nameState');
 	if (action.type === 'USER_INPUT') {
 		return {
 			value: action.val,
@@ -81,7 +84,7 @@ const streetReducer = (state, action) => {
 	if (action.type === 'RESET') {
 		return initialStateInput;
 	}
-		if (action.type === 'SUBMIT') {
+	if (action.type === 'SUBMIT') {
 		return {
 			value: state.value,
 			isValid: state.isValid,
@@ -96,14 +99,14 @@ const postalReducer = (state, action) => {
 	if (action.type === 'USER_INPUT') {
 		return {
 			value: action.val,
-			isValid: action.val.trim().length > 6,
+			isValid: action.val.trim().length > 5,
 			isTouched: state.isTouched,
 		};
 	}
 	if (action.type === 'INPUT_BLUR') {
 		return {
 			value: state.value,
-			isValid: state.value.trim().length > 6,
+			isValid: state.value.trim().length > 5,
 			isTouched: true,
 		};
 	}
@@ -157,8 +160,6 @@ const Checkout = (props) => {
 	const postalInputRef = useRef();
 	const cityInputRef = useRef();
 
-	const [formIsValid, setFormIsValid] = useState(false);
-
 	const [nameState, dispatchName] = useReducer(nameReducer, {
 		value: '',
 		isValid: null,
@@ -189,50 +190,34 @@ const Checkout = (props) => {
 		isTouched: false,
 	});
 
-	const { isValid: enterednameIsInvalid, isTouched: nameIsTouched } = nameState;
-	const { isValid: enteredemailIsInvalid, isTouched: emailIsTouched } =
+	const { isValid: enteredNameIsValid, isTouched: nameIsTouched } = nameState;
+	const { isValid: enteredEmailIsValid, isTouched: emailIsTouched } =
 		emailState;
-	const { isValid: enteredstreetIsInvalid, isTouched: streetIsTouched } =
+	const { isValid: enteredStreetIsValid, isTouched: streetIsTouched } =
 		streetState;
-	const { isValid: enteredpostalIsInvalid, isTouched: postalIsTouched } =
+	const { isValid: enteredPostalIsValid, isTouched: postalIsTouched } =
 		postalState;
-	const { isValid: enteredcityIsInvalid, isTouched: cityIsTouched } = cityState;
+	const { isValid: enteredCityIsValid, isTouched: cityIsTouched } = cityState;
 
-	const nameIsInvalid = !enterednameIsInvalid && nameIsTouched;
-	const emailIsInvalid = !enteredemailIsInvalid && emailIsTouched;
-	const streetIsInvalid = !enteredstreetIsInvalid && streetIsTouched;
-	const postalIsInvalid = !enteredpostalIsInvalid && postalIsTouched;
-	const cityIsInvalid = !enteredcityIsInvalid && cityIsTouched;
+	// we are setting the below variables to avoid form validation first time is rendered
 
-	useEffect(() => {
-		const identifier = setTimeout(() => {
-			console.log('Checking form validity!');
+	const nameIsInvalid = !enteredNameIsValid && nameIsTouched;
+	const emailIsInvalid = !enteredEmailIsValid && emailIsTouched;
+	const streetIsInvalid = !enteredStreetIsValid && streetIsTouched;
+	const postalIsInvalid = !enteredPostalIsValid && postalIsTouched;
+	const cityIsInvalid = !enteredCityIsValid && cityIsTouched;
 
-			setFormIsValid(
-				nameIsInvalid &&
-					emailIsInvalid &&
-					streetIsInvalid &&
-					postalIsInvalid &&
-					cityIsInvalid
-			);
-		}, 500);
+	let isFormValid = false;
 
-		return () => {
-			console.log('CLEANUP');
-			clearTimeout(identifier);
-		};
-	}, [
-		enterednameIsInvalid,
-		enteredemailIsInvalid,
-		enteredstreetIsInvalid,
-		enteredpostalIsInvalid,
-		enteredcityIsInvalid,
-		nameIsTouched,
-		emailIsTouched,
-		streetIsTouched,
-		postalIsTouched,
-		cityIsTouched,
-	]);
+	if (
+		!nameIsInvalid &&
+		!emailIsInvalid &&
+		!streetIsInvalid &&
+		!postalIsInvalid &&
+		!cityIsInvalid
+	) {
+		isFormValid = true;
+	}
 
 	const nameChangeHandler = (event) => {
 		dispatchName({ type: 'USER_INPUT', val: event.target.value });
@@ -259,6 +244,7 @@ const Checkout = (props) => {
 	};
 
 	const validateEmailHandler = () => {
+		// we use Blur when input lost focus
 		dispatchEmail({ type: 'INPUT_BLUR' });
 	};
 
@@ -277,7 +263,7 @@ const Checkout = (props) => {
 	const submitCheckoutHandler = (event) => {
 		event.preventDefault();
 
-		if (formIsValid) {
+		if (isFormValid) {
 			console.log('Valid - Submit form');
 		} else if (nameIsInvalid) {
 			nameInputRef.current.focus();
@@ -314,7 +300,7 @@ const Checkout = (props) => {
 							id: 'name',
 							type: 'text',
 							value: nameState.value,
-							isValid: `${enterednameIsInvalid}`,
+							isValid: `${enteredNameIsValid}`,
 							onChange: nameChangeHandler,
 							onBlur: validateNameHandler,
 						}}
@@ -336,7 +322,7 @@ const Checkout = (props) => {
 							id: 'email',
 							type: 'email',
 							value: emailState.value,
-							isValid: `${enteredemailIsInvalid}`,
+							isValid: `${enteredEmailIsValid}`,
 							onChange: emailChangeHandler,
 							onBlur: validateEmailHandler,
 						}}
@@ -358,7 +344,7 @@ const Checkout = (props) => {
 							id: 'street',
 							type: 'text',
 							value: streetState.value,
-							isValid: `${enteredstreetIsInvalid}`,
+							isValid: `${enteredStreetIsValid}`,
 							onChange: streetChangeHandler,
 							onBlur: validateStreetHandler,
 						}}
@@ -378,7 +364,7 @@ const Checkout = (props) => {
 						input={{
 							id: 'postal',
 							type: 'text',
-							isValid: `${enteredpostalIsInvalid}`,
+							isValid: `${enteredPostalIsValid}`,
 							onChange: postalChangeHandler,
 							onBlur: validatePostalHandler,
 						}}
@@ -398,7 +384,7 @@ const Checkout = (props) => {
 						input={{
 							id: 'city',
 							type: 'text',
-							isValid: `${enteredcityIsInvalid}`,
+							isValid: `${enteredCityIsValid}`,
 							onChange: cityChangeHandler,
 							onBlur: validateCityHandler,
 						}}
@@ -408,7 +394,11 @@ const Checkout = (props) => {
 					)}
 				</div>
 				<div className={classes.actions}>
-					<button type="submit" className={classes.submit}>
+					<button
+						type="submit"
+						disabled={!isFormValid}
+						className={classes.submit}
+					>
 						Confirm
 					</button>
 					<button type="button" onClick={props.onCancel}>
