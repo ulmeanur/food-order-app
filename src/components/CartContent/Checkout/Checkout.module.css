@@ -64,16 +64,16 @@
 	cursor: not-allowed;
 }
 
-.invalid label,
+/* .invalid label,
 .error {
 	color: #ca3e51;
-}
+} 
 
 .invalid input {
 	border-color: #aa0b20;
 	background-color: #ffeff1;
 }
-
+*/
 .checkout {
 	border-radius: 15px;
 	padding: 1rem;

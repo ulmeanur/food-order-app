@@ -7,7 +7,7 @@ import Input from '../../UI/Input/Input';
 const initialStateInput = { value: '', isValid: false, isTouched: false };
 
 const nameReducer = (state, action) => {
-	console.log('nameReducer should update nameState');
+	
 	if (action.type === 'USER_INPUT') {
 		return {
 			value: action.val,
@@ -288,11 +288,7 @@ const Checkout = (props) => {
 		<div className={classes.checkout}>
 			<h2>Checkout details</h2>
 			<form className={classes.form} onSubmit={submitCheckoutHandler}>
-				<div
-					className={`${classes.control} ${
-						nameIsInvalid ? classes.invalid : ''
-					}`}
-				>
+			<div className={classes.control}>
 					<Input
 						ref={nameInputRef}
 						label="Name"
@@ -304,17 +300,12 @@ const Checkout = (props) => {
 							onChange: nameChangeHandler,
 							onBlur: validateNameHandler,
 						}}
+						hasError={nameIsInvalid}
+						errorMessage="Error! Name is not valid!"
 					/>
-					{nameIsInvalid && (
-						<p className={classes.error}>Error! Value entered is invalid!</p>
-					)}
 				</div>
 
-				<div
-					className={`${classes.control} ${
-						emailIsInvalid ? classes.invalid : ''
-					}`}
-				>
+				<div className={classes.control}>
 					<Input
 						ref={emailInputRef}
 						label="Email"
@@ -326,17 +317,12 @@ const Checkout = (props) => {
 							onChange: emailChangeHandler,
 							onBlur: validateEmailHandler,
 						}}
+						hasError={emailIsInvalid}
+						errorMessage="Error! Email is not valid!"
 					/>
-					{emailIsInvalid && (
-						<p className={classes.error}>Error! Value entered is invalid!</p>
-					)}
 				</div>
 
-				<div
-					className={`${classes.control} ${
-						streetIsInvalid ? classes.invalid : ''
-					}`}
-				>
+				<div className={classes.control}>
 					<Input
 						ref={streetInputRef}
 						label="Street"
@@ -348,16 +334,11 @@ const Checkout = (props) => {
 							onChange: streetChangeHandler,
 							onBlur: validateStreetHandler,
 						}}
+						hasError={streetIsInvalid}
+						errorMessage="Error! Street is not valid!"
 					/>
-					{streetIsInvalid && (
-						<p className={classes.error}>Error! Value entered is invalid!</p>
-					)}
 				</div>
-				<div
-					className={`${classes.control} ${
-						postalIsInvalid ? classes.invalid : ''
-					}`}
-				>
+				<div className={classes.control}>
 					<Input
 						ref={postalInputRef}
 						label="Postal Code"
@@ -368,16 +349,11 @@ const Checkout = (props) => {
 							onChange: postalChangeHandler,
 							onBlur: validatePostalHandler,
 						}}
+						hasError={postalIsInvalid}
+						errorMessage="Error! Postal Code is not valid!"
 					/>
-					{postalIsInvalid && (
-						<p className={classes.error}>Error! Value entered is invalid!</p>
-					)}
 				</div>
-				<div
-					className={`${classes.control} ${
-						cityIsInvalid ? classes.invalid : ''
-					}`}
-				>
+				<div className={classes.control}>
 					<Input
 						ref={cityInputRef}
 						label="City"
@@ -388,10 +364,9 @@ const Checkout = (props) => {
 							onChange: cityChangeHandler,
 							onBlur: validateCityHandler,
 						}}
+						hasError={cityIsInvalid}
+						errorMessage="Error! City is not valid!"
 					/>
-					{cityIsInvalid && (
-						<p className={classes.error}>Error! Value entered is invalid!</p>
-					)}
 				</div>
 				<div className={classes.actions}>
 					<button

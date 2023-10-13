@@ -16,3 +16,13 @@
     font: inherit;
     padding-left: 0.5rem;
   }
+
+.invalid label,
+.input-error {
+	color: #ca3e51;
+} 
+
+.invalid input {
+	border-color: #aa0b20;
+	background-color: #ffeff1;
+}
