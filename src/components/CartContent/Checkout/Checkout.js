@@ -98,6 +98,12 @@ const Checkout = (props) => {
 		submitedStreetValueHandler();
 		submitedPostalValueHandler();
 		submitedCityValueHandler();
+
+		// resetNameHandler();
+		// resetEmailHandler();
+		// resetStreetHandler();
+		// resetPostalHandler();
+		// resetCityHandler();
 	};
 
 	return (
