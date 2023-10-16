@@ -1,3 +1,10 @@
+.checkout {
+	border-radius: 15px;
+	padding: 1rem;
+	background-color: rgb(247, 247, 247);
+	margin: 1rem 0;
+}
+
 .form {
 	/* margin: 1rem 0;
 	height: 19rem;
@@ -74,9 +81,3 @@
 	background-color: #ffeff1;
 }
 */
-.checkout {
-	border-radius: 15px;
-	padding: 1rem;
-	background-color: rgb(247, 247, 247);
-	margin: 1rem 0;
-}
