@@ -1,21 +1,45 @@
 import React, { useReducer } from 'react';
 
-const useInput = (validateValue) => {
+const useInput = (validationRules) => {
+
+	const isInputFieldValid = (inputFieldValue, validationRules) => {
+		for (const rule of validationRules) {
+		  if (!rule.validate(inputFieldValue)) {
+			return {
+				isValid: false,
+				errorMessage: rule.message
+			  };
+		  }
+		}
+  
+		return {
+			isValid: true,
+			errorMessage: ""
+		  };
+	  };
+
 	const initialStateInput = { value: '', isValid: false, isTouched: false };
 
 	const inputReducer = (state, action) => {
+
+		let isValidInput;;
+
 		if (action.type === 'USER_INPUT') {
+			isValidInput = isInputFieldValid(action.val, validationRules);
 			return {
 				value: action.val,
-				isValid: validateValue(action.val),
+				isValid: isValidInput.isValid,
 				isTouched: state.isTouched,
+				error: isValidInput.errorMessage
 			};
 		}
 		if (action.type === 'INPUT_BLUR') {
+			isValidInput = isInputFieldValid(state.value, validationRules);
 			return {
 				value: state.value,
-				isValid: validateValue(state.value),
+				isValid: isValidInput.isValid,
 				isTouched: true,
+				error: isValidInput.errorMessage
 			};
 		}
 
@@ -38,6 +62,7 @@ const useInput = (validateValue) => {
 		value: '',
 		isValid: null,
 		isTouched: false,
+		error: ''
 	});
 
 	const inputChangeHandler = (event) => {
@@ -62,6 +87,7 @@ const useInput = (validateValue) => {
 		value,
 		isValid: enteredValueIsValid,
 		isTouched: inputValueIsTouched,
+		error
 	} = inputState;
 	// we are setting the below variable to avoid form validation first time is rendered
 
@@ -70,6 +96,7 @@ const useInput = (validateValue) => {
 	return {
 		value,
 		hasError: inputHasError,
+		error,
 		inputChangeHandler,
 		inputBlurHandler,
 		submitedValueHandler,
