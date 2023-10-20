@@ -1,4 +1,4 @@
-import React, { useState, useRef, useReducer } from 'react';
+import React, { useRef } from 'react';
 import classes from './Checkout.module.css';
 import Input from '../../UI/Input/Input';
 import useInput from '../../../hooks/use-input';
@@ -61,7 +61,6 @@ const emailRequiredRule = (inputName) => {
 // };
 
 const Checkout = (props) => {
-
 	const nameValidationRules = [
 		requiredRule('name'),
 		minLengthRule('name', 3),
@@ -93,20 +92,20 @@ const Checkout = (props) => {
 		resetInputHandler: resetEmailHandler,
 	} = useInput(emailValidationRules);
 
-	const streetValidationRules = [
-		requiredRule('street'),
-		minLengthRule('street', 3),
-		maxLengthRule('street', 25),
+	const addressValidationRules = [
+		requiredRule('address'),
+		minLengthRule('address', 3),
+		maxLengthRule('address', 25),
 	];
 	const {
-		value: enteredStreetValue,
-		hasError: streetHasError,
-		error: streetErrorMessage,
-		inputChangeHandler: streetChangeHandler,
-		inputBlurHandler: streetBlurHandler,
-		submitedValueHandler: submitedStreetValueHandler,
-		resetInputHandler: resetStreetHandler,
-	} = useInput(streetValidationRules);
+		value: enteredAddressValue,
+		hasError: addressHasError,
+		error: addressErrorMessage,
+		inputChangeHandler: addressChangeHandler,
+		inputBlurHandler: addressBlurHandler,
+		submitedValueHandler: submitedAddressValueHandler,
+		resetInputHandler: resetAddressHandler,
+	} = useInput(addressValidationRules);
 
 	const postalValidationRules = [
 		requiredRule('postal code'),
@@ -140,7 +139,7 @@ const Checkout = (props) => {
 
 	const nameInputRef = useRef();
 	const emailInputRef = useRef();
-	const streetInputRef = useRef();
+	const addressInputRef = useRef();
 	const postalInputRef = useRef();
 	const cityInputRef = useRef();
 
@@ -149,7 +148,7 @@ const Checkout = (props) => {
 	if (
 		!nameHasError &&
 		!emailHasError &&
-		!streetHasError &&
+		!addressHasError &&
 		!postalHasError &&
 		!cityHasError
 	) {
@@ -161,32 +160,42 @@ const Checkout = (props) => {
 
 		if (isFormValid) {
 			console.log('Valid - Submit form');
+			props.onConfirm({
+				name: enteredNameValue,
+				email: enteredEmailValue,
+				address: enteredAddressValue,
+				postalcode: enteredPostalValue,
+				city: enteredCityValue,
+			});
+			
+			//after sending data to server we should Reset the values (dispach the RESET instead of SUBMIT)
+		// until then we will display the data on inputs
+
+		// submitedNameValueHandler();
+		// submitedEmailValueHandler();
+		// submitedAddressValueHandler();
+		// submitedPostalValueHandler();
+		// submitedCityValueHandler();
+
+		resetNameHandler();
+		resetEmailHandler();
+		resetAddressHandler();
+		resetPostalHandler();
+		resetCityHandler();
+
 		} else if (nameHasError) {
 			nameInputRef.current.focus();
 		} else if (emailHasError) {
 			emailInputRef.current.focus();
-		} else if (streetHasError) {
-			streetInputRef.current.focus();
+		} else if (addressHasError) {
+			addressInputRef.current.focus();
 		} else if (postalHasError) {
 			postalInputRef.current.focus();
 		} else if (cityHasError) {
 			cityInputRef.current.focus();
 		}
 
-		//after sending data to server we should Reset the values (dispach the RESET instead of SUBMIT)
-		// until then we will display the data on inputs
-
-		submitedNameValueHandler();
-		submitedEmailValueHandler();
-		submitedStreetValueHandler();
-		submitedPostalValueHandler();
-		submitedCityValueHandler();
-
-		// resetNameHandler();
-		// resetEmailHandler();
-		// resetStreetHandler();
-		// resetPostalHandler();
-		// resetCityHandler();
+		
 	};
 
 	return (
@@ -227,17 +236,17 @@ const Checkout = (props) => {
 
 				<div className={classes.control}>
 					<Input
-						ref={streetInputRef}
-						label="Street"
+						ref={addressInputRef}
+						label="Address"
 						input={{
-							id: 'street',
+							id: 'address',
 							type: 'text',
-							value: enteredStreetValue,
-							onChange: streetChangeHandler,
-							onBlur: streetBlurHandler,
+							value: enteredAddressValue,
+							onChange: addressChangeHandler,
+							onBlur: addressBlurHandler,
 						}}
-						showError={streetHasError}
-						errorMessage={streetErrorMessage}
+						showError={addressHasError}
+						errorMessage={addressErrorMessage}
 					/>
 				</div>
 				<div className={classes.control}>
