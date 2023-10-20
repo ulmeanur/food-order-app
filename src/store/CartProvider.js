@@ -8,20 +8,20 @@ const defaultCartState = {
 
 //the Cart State
 const cartReducer = (state, action) => {
-	// state is a state object and the last state snapshop managed by the Reducer
-	// action is the action (a number or a text or an object) the will triggered by the Reducer's dispatche function
+
+	/**
+	@param {object} state -  is a state object and has the last state snapshop managed by the Reducer
+	@param {string} action -  is the action (a number or a text or an object) that will be triggered by the Reducer's dispatche function
  
-	// cartReducer func is created outside the component
-	// as it doesn't need anything from the component
-	// and it shoudn't need to be recreated everytime when the component is re-evaluated
+	cartReducer func is created outside the component
+	as it doesn't need anything from the component
+	it shoudn't need to be recreated everytime when the component is re-evaluated
+	*/
 
     if( action.type === "ADD") {
-		console.log(" ADD item", action.item);
 
-        const updatedTotalAmount = state.totalAmount + (action.item.price * action.item.amount);
-
+		const updatedTotalAmount = state.totalAmount + (action.item.price * action.item.amount);
 		const existingCartItemsIndex = state.items.findIndex(item => item.id === action.item.id);
-
 		const existingCartItem = state.items[existingCartItemsIndex];
         // concat() generates a brand new array instead of push() that adds a new item
         
@@ -77,6 +77,10 @@ const cartReducer = (state, action) => {
         }
 	}
 
+	if( action.type === "CLEAR") {
+		return defaultCartState;
+	}
+
 	return defaultCartState;
 };
 
@@ -86,7 +90,6 @@ const CartProvider = (props) => {
     const [cartState, dispatchCartAction] = useReducer(cartReducer, defaultCartState);
 
 	const addItemToCartHandler = (item) => {
-		console.log("dispatchCartAction --> ADD");
         dispatchCartAction({type: "ADD", item: item});
     };
 
@@ -94,11 +97,16 @@ const CartProvider = (props) => {
         dispatchCartAction({type: "REMOVE", id: id});
     };
 
+	const clearCartFromCartHandler = () => {
+        dispatchCartAction({type: "CLEAR"});
+    };
+
 	const cartContext = {
 		items: cartState.items,
 		totalAmount: cartState.totalAmount,
 		addItem: addItemToCartHandler,
 		removeItem: removeItemFromCartHandler,
+		clearCart: clearCartFromCartHandler,
 	};
 
 	return (

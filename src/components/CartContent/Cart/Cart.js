@@ -10,6 +10,7 @@ const Cart = (props) => {
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [didSubmit, setDidSubmit] = useState(false);
 	const cartCtx = useContext(CartContext);
+	const [httpError, setHttpError] = useState();
 
 	const totalAmount = `$${cartCtx.totalAmount.toFixed(2)}`;
 
@@ -28,34 +29,79 @@ const Cart = (props) => {
 	const cartItemAddHandler = (item) => {
 		// bind() is used to ensure that item is passed to the cartItemAddHandler function
 		cartCtx.addItem({ ...item, amount: 1 });
-		console.log('cartCtx=', cartCtx);
 	};
 
 	const submitOrderHandler = async (userData) => {
-		// if form is valid send data to the server
-		setIsSubmitting(true);
-		const response = await fetch(
-			'https://foodorder-01-default-rtdb.europe-west1.firebasedatabase.app/orders.json',
-			{
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify({
-					user: userData,
-					orderItems: cartCtx.items,
-				}),
+		try {
+			// if form is valid send data to the server
+			setIsSubmitting(true);
+			const response = await fetch(
+				'https://foodorder-01-default-rtdb.europe-west1.firebasedatabase.app/orders.json',
+				{
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+					},
+					body: JSON.stringify({
+						user: userData,
+						orderItems: cartCtx.items,
+					}),
+				}
+			);
+
+			if (!response.ok) {
+				console.log('we have a submition error that we need to handle it');
+				throw new Error('Something went wrong');
 			}
-		);
 
-		if (!response.ok) {
-			console.log('we have a submition error that we need to handle');
-			throw new Error('Something went wrong');
+			setIsSubmitting(false);
+			setDidSubmit(true);
+			cartCtx.clearCart();
+
+		} catch (error) {
+			setIsSubmitting(false);
+			setDidSubmit(false);
+			setHttpError(error.message);
 		}
-
-		setIsSubmitting(false);
-		setDidSubmit(true);
 	};
+
+	const closeModalBtn = (
+		<div className={classes.actions}>
+			<form>
+				<button className={classes.button} onClick={props.onClose}>
+					Close
+				</button>
+			</form>
+		</div>
+	);
+
+	const sendingOrderContent = (
+		<section className={classes['order-submitting']}>
+			<p>Items are send to server ...</p>
+		</section>
+	);
+
+	const failedOrderContent = (
+		<section className={classes['order-failed']}>
+			<p>Something went wrong! Please try again later.</p>
+			<p className={classes['error-type']}>Error message: {httpError}</p>
+			{closeModalBtn}
+		</section>
+	);
+
+	const successOrderContent = (
+		<section className={classes['order-sent']}>
+			<p>Success! Order was placed and is on your way.</p>
+			{closeModalBtn}
+		</section>
+	);
+	// if (isSubmitting) {
+	// 	return sendingOrderContent;
+	// }
+
+	// if (httpError) {
+	// 	return failedOrderContent;
+	// }
 
 	const cartItems = (
 		<ul className={classes['cart-item']}>
@@ -109,11 +155,14 @@ const Cart = (props) => {
 		</Fragment>
 	);
 
-	return <Modal onClose={props.onClose}>
-				{isSubmitting && <p>Loading ... </p>}
-				{!isSubmitting && !didSubmit && cartModalContent}
-				{didSubmit && <p>Order was placed!</p>}
-			</Modal>;
+	return (
+		<Modal onClose={props.onClose}>
+			{!isSubmitting && !didSubmit && !httpError && cartModalContent}
+			{isSubmitting && sendingOrderContent}
+			{!isSubmitting && didSubmit && successOrderContent}
+			{!didSubmit && httpError && failedOrderContent}
+		</Modal>
+	);
 };
 
 export default Cart;

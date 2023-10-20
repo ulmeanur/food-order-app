@@ -54,3 +54,18 @@
     color: white;
   }
 
+.order-submitting {
+  font-weight: bold;
+}
+
+.order-sent {
+  color: green;
+}
+
+.order-failed {
+  color: rgb(122, 7, 7);
+}
+
+.error-type {
+  font-style: italic;
+}
